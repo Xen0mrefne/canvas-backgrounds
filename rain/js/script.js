@@ -2,18 +2,18 @@ const canvas = document.getElementById("rain-canvas");
 
 const rainOptions = {
     length: 40,
-    quantity: 50,
-    rotation: 15
+    quantity: 100,
+    xSpeed: 7,
 }
 
 const raindrops = [];
 
 function Randomizer() {
     this.getX = function() {
-        return Math.floor(Math.random() * window.innerWidth);
+        return Math.floor(Math.random() * (window.innerWidth + rainOptions.xSpeed * 30));
     }
     this.getSpeed = function() {
-        return Math.ceil(Math.random() * 10 + 15);
+        return Math.ceil(Math.random() * 10 + 20);
     }
     this.getDelay = function() {
         return Math.floor(Math.random() * 500);
@@ -39,23 +39,26 @@ function draw() {
 
         let arrived = false;
 
+        raindrops[i].x -= rainOptions.xSpeed
         raindrops[i].y += raindrops[i].speed;
         if (raindrops[i].y > window.innerHeight + raindrops[i].length) {
             arrived = true;
         }
 
-        ctx.strokeStyle = "#ffffffc0";
+        ctx.strokeStyle = "#ffffff80";
+        ctx.lineWidth = 2
 
         
         ctx.beginPath();
         ctx.moveTo(raindrops[i].x, raindrops[i].y);
-        ctx.lineTo(raindrops[i].x, raindrops[i].y + raindrops[i].length);
+        ctx.lineTo(raindrops[i].x - (rainOptions.xSpeed * 1.5), raindrops[i].y + (raindrops[i].speed * 1.5));
         ctx.stroke();
         ctx.closePath();
 
 
         if (arrived) {
             raindrops[i].y = null
+            raindrops[i].x = randomizer.getX()
         }
     }
 

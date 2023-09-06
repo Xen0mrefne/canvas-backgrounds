@@ -7,17 +7,22 @@ const wormLength = 8;
 const segmentRadius = 15;
 const segmentY = 10;
 
-function getRandomY() {
-    return Math.ceil(Math.random() * window.innerHeight);
+function Randomizer() {
+    this.getY = function() {
+        return Math.ceil(Math.random() * window.innerHeight);
+    }
+    this.getSpeed = function() {
+        return (Math.random() * 4) + 2;
+    }
+    this.coinFlip = function() {
+        return Math.floor(Math.random() * 2) === 0;
+    }
+    this.getDelay = function() {
+        return Math.floor(Math.random() * 500);
+    }
 }
 
-function getRandomSpeed() {
-    return (Math.random() * 4) + 2
-}
-
-function getRandomDir() {
-    return Math.floor(Math.random() * 2) === 0;
-}
+const randomizer = new Randomizer();
 
 function draw() {
     const ctx = canvas.getContext("2d");
@@ -25,6 +30,11 @@ function draw() {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
     for (let i = 0; i < wormQuantity; i++) {
+        if (worms[i].countdown > 0) {
+            worms[i].countdown -= 1;
+            continue;
+        }
+
         if (worms[i].x === null) {
             if (worms[i].fromLeft) 
                 worms[i].x = -wormLength * (segmentRadius * 2);
@@ -72,8 +82,8 @@ function draw() {
 
         if (arrived) {
             worms[i].x = null;
-            worms[i].y = getRandomY();
-            worms[i].speed = getRandomSpeed();
+            worms[i].y = randomizer.getY();
+            worms[i].speed = randomizer.getSpeed();
             worms[i].segments = [];
         }
     }
@@ -87,11 +97,12 @@ function draw() {
 function init() {
     for (let i = 0; i < wormQuantity; i++) {
         worms[i] = {
-            speed: getRandomSpeed(),
+            speed: randomizer.getSpeed(),
             x: null,
-            y: getRandomY(),
-            fromLeft: getRandomDir(),
-            segments: []
+            y: randomizer.getY(),
+            fromLeft: randomizer.coinFlip(),
+            segments: [],
+            countdown: randomizer.getDelay()
         }
     }
     canvas.setAttribute("width", window.innerWidth)

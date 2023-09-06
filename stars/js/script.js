@@ -4,33 +4,33 @@ const starQuantity = 300;
 const sizeMultiplier = 0.4;
 const stars = []
 
-function getRandomSpeed() {
-    return Math.random() * 3 + 1;
-}
-
-function getRandomY() {
-    return Math.ceil(Math.random() * window.innerHeight);
-}
-
-function getRandomDelay() {
-    return Math.ceil(Math.random() * 1000);
-}
-
-function getBlinkColor() {
-    const value = Math.floor(Math.random() * 3);
-    switch (value) {
-        case 0:
-            return "#fff"
-        case 1: 
-            return "#f00"
-        case 2:
-            return "#00f"
+function Randomizer() {
+    this.getSpeed = function() {
+        return Math.random() * 3 + 1;
+    }
+    this.getY = function() {
+        return Math.ceil(Math.random() * window.innerHeight);
+    }
+    this.getDelay = function() {
+        return Math.ceil(Math.random() * 1000);
+    }
+    this.getBlinkColor = function() {
+        const value = Math.floor(Math.random() * 3);
+        switch (value) {
+            case 0:
+                return "#fff"
+            case 1: 
+                return "#f00"
+            case 2:
+                return "#00f"
+        }
+    }
+    this.coinFlip = function() {
+        return Math.floor(Math.random() * 2) === 0;
     }
 }
 
-function coinFlip() {
-    return Math.floor(Math.random() * 2) === 0;
-}
+const randomizer = new Randomizer()
 
 function draw() {
 
@@ -57,7 +57,7 @@ function draw() {
         }
 
         if (stars[i].blinking) {
-            ctx.fillStyle = getBlinkColor();
+            ctx.fillStyle = randomizer.getBlinkColor();
         } else {
             ctx.fillStyle = "#fff"
         }
@@ -67,12 +67,12 @@ function draw() {
         ctx.fill()
 
         if (arrived) {
-            const speed = getRandomSpeed();
+            const speed = randomizer.getSpeed();
             stars[i].x = null;
-            stars[i].y = getRandomY();
+            stars[i].y = randomizer.getY();
             stars[i].speed = speed;
             stars[i].size = speed * sizeMultiplier;
-            stars[i].blinking = coinFlip();
+            stars[i].blinking = randomizer.coinFlip();
         }
 
     }
@@ -83,14 +83,14 @@ function draw() {
 function init() {
 
     for (let i = 0; i < starQuantity; i++) {
-        const speed = getRandomSpeed();
+        const speed = randomizer.getSpeed();
         stars[i] = {
             speed: speed,
             x: null,
-            y: getRandomY(),
+            y: randomizer.getY(),
             size: speed * sizeMultiplier,
-            blinking: coinFlip(),
-            countdown: getRandomDelay()
+            blinking: randomizer.coinFlip(),
+            countdown: randomizer.getDelay()
         }
     }
 
